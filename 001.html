@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Basic CRUD Application - jQuery EasyUI CRUD Demo</title>
+    <link rel="stylesheet" type="text/css" href="./easyui/themes/metro/easyui.css">
+    <link rel="stylesheet" type="text/css" href="./easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="./easyui/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="./easyui/demo/demo.css">
+    <script type="text/javascript" src="./easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="./easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="datagrid-export.js"></script>
+</head>
+<style>
+    body,
+    html {
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    ul li {
+        list-style-type: none;
+    }
+
+    #ul li input {
+        display: block;
+    }
+
+    #ul {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #ul li {
+        line-height: 30px;
+    }
+
+    #ul1 {
+        display: flex;
+        justify-content: flex-start;
+        margin-left: 35px;
+    }
+
+    #ul1 li {
+        padding: 8px 8px;
+        border: solid 1px #9999994f;
+        margin-right: 20px;
+    }
+
+    #ul1 li:nth-of-type(1) {
+        background: #009999;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    #ul1 li:nth-of-type(3) {
+        color: #048b8b;
+        cursor: pointer;
+        border: none;
+    }
+
+    #ul1 li:nth-of-type(4) {
+        border: solid 1px #009999;
+        color: #009999;
+        border-radius: 0px;
+    }
+
+    .datagrid_bar {
+        width: 1200px;
+        border: solid 1px #9999994f;
+        margin: auto;
+        margin-top: 30px;
+    }
+
+    .btn {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: solid 1px #9999994f;
+        height: 50px;
+    }
+
+    .ul {
+        display: flex;
+        padding: 0px 10px;
+        font-size: 14px;
+        margin-bottom: 0px;
+        font-family: '微雅软黑';
+    }
+
+    .ul li {
+        margin: 0px 15px;
+        padding: 0px 0px;
+    }
+
+    .ul li a {
+        color: #000;
+        font-weight: 400;
+    }
+
+    .ul li:hover {
+        border-bottom: solid 2px #2387aa;
+    }
+
+    .ul li a:hover {
+        color: #2387aa;
+    }
+
+    #row_btn {
+        border-radius: 0px;
+        color: #2387aa;
+        border: solid 1px #2387aa;
+        margin-top: -5px;
+        padding: 0px 10px;
+    }
+
+    #Export {
+        border-radius: 0px;
+        margin-top: -5px;
+        padding: 0px 10px;
+        background: #2387aa;
+        color: #fff;
+    }
+
+    #Export:hover {
+        color: #000
+    }
+
+    .datagrid {
+        padding: 10px;
+    }
+
+    .panel-body {
+        padding: 10px;
+        border-color: #9999994f;
+
+    }
+
+    .datagrid-header-row td {
+        background: rgb(155, 151, 151);
+        color: #fff;
+        position: relative;
+    }
+
+    .datagrid-header-row td::before {
+        content: "";
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        border-right: solid 2px #fff;
+        padding-bottom: 30px;
+    }
+
+    .combo-arrow {
+        background-color: none;
+    }
+</style>
+
+<body>
+    <div style="border: solid 1px #9999994f;width: 1200px;margin:20px auto;">
+        <!-- <div style="width:100%;margin-bottom: 30px;">
+            <ul id="ul">
+                <li>
+                    <input value="Starts With" class="easyui-combobox" data-options="
+                 label: ' Product Owner Emall:',
+                 labelPosition: 'top',
+                 ">
+                </li>
+                <li>
+                    <input value="Starts With" class="easyui-combobox" data-options="
+                 label: ' MLFB:',
+                 labelPosition: 'top'
+                 ">
+                </li>
+                <li>
+                    <input value="Starts With" class="easyui-combobox" data-options="
+                 label: ' V-GCK_PMD:',
+                 labelPosition: 'top'
+                 ">
+                </li>
+                <li>
+                    <input value="Starts With" class="easyui-combobox" data-options="
+                 label: ' PG_PMD:',
+                 labelPosition: 'top'
+                 ">
+                </li>
+                <li>
+                    <input value="Starts With" class="easyui-combobox" data-options="
+                 label: 'MPG_SAP:',
+                 labelPosition: 'top'
+                 ">
+                </li>
+            </ul>
+        </div> -->
+        <div>
+            <ul id="ul1">
+                <li onclick="datagrid_selects()">search</li>
+                <li>reset</li>
+                <li>More</li>
+                <li class="easyui-linkbutton" id="moduls" data-options="iconCls:'icon-undo'">下载模板</li>
+            </ul>
+        </div>
+    </div>
+    <div class="datagrid_bar">
+        <div class="btn">
+            <ul class="ul">
+                <li id="datagrid_li"><a href="#" onclick="datagrid_all()" id="datagrid_a">显示全部</a></li>
+                <li id="datagrid_li1"><a href="#" onclick="datagird_name()" id="datagrid_a1">显示名字</a></li>
+                <li><a href="#">显示地址</a></li>
+            </ul>
+            <ul class="ul">
+                <li><a href="#" class="easyui-menubutton" id="row_btn" onclick="textMenu()" >自定义列</a></li>
+                <li><a href="#" class="easyui-linkbutton" id="Export" data-options="iconCls:'icon-edit'"
+                        onclick="Excel()">Export</a></li>
+            </ul>
+        </div>
+        <div id="mm" style="width: 150px;">
+                      
+        </div>
+        <div class="datagrid">
+            <table id="dg" style="height:400px;">
+                <thead>
+                    <tr>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        createColumnMenu()
+        $("#datagrid_li").css("border-bottom", "solid 2px #009999")
+        $("#datagrid_a").css("color", "#009999")
+    })
+    var cmenu;
+    var alldata = [
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35001,
+            "mobile": 123455,
+            "name": "黄浩",
+            "sex": 1
+
+        },
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35002,
+            "mobile": 123455,
+            "name": "黄浩1",
+            "sex": 1
+
+        }, {
+            "address": "郑州",
+            "age": 18,
+            "id": 35003,
+            "mobile": 123455,
+            "name": "黄浩2",
+            "sex": 0
+
+        }, {
+            "address": "郑州",
+            "age": 18,
+            "id": 35004,
+            "mobile": 123455,
+            "name": "黄浩3",
+            "sex": 1
+
+        }, {
+            "address": "郑州",
+            "age": 18,
+            "id": 35005,
+            "mobile": 123455,
+            "name": "黄浩4",
+            "sex": 0
+
+        }, {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        }, {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+        {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        }, {
+            "address": "郑州",
+            "age": 18,
+            "id": 35006,
+            "mobile": 123455,
+            "name": "黄浩5",
+            "sex": 1
+
+        },
+
+
+    ]
+
+    $('#dg').datagrid({
+        data: alldata,
+        fitColumns: true,
+        singleSelect: false,
+        striped: false,
+        pagination: true,
+        // onHeaderContextMenu: function (e, field) {
+        //     e.preventDefault();//取消事件的默认动作。
+        //     if (!cmenu) {
+        //         createColumnMenu();
+        //     }
+        //     cmenu.menu('show', {
+        //         left: e.pageX,
+        //         top: e.pageY
+        //     });
+        // },
+        columns: [[
+            { field: "id", width: "50", checkbox: "true", align: "center", title: "ID" },
+            { field: "name", width: "200", align: "center", title: "名字" },
+            {
+                field: "sex", width: "200", align: "center", title: "性别", styler: function (value, row, index) {
+                    if (value < 2) {
+                        return 'background-color:#999;color:#000;'
+                    }
+                }
+            },
+            { field: "age", width: "200", align: "center", title: "年龄" },
+            {
+                field: "mobile", width: "200", align: "center", title: "手机号", styler: function (value, row, index) {
+                    //console.log(value, row, index)
+                    if (value > 10) {
+                        return 'background-color:#999;color:#000;'
+                    }
+                }
+            },
+            { field: "address", width: "200", align: "center", title: "地址" },
+        ]]
+    });
+    function createColumnMenu() {
+        //cmenu = $('<div />').appendTo('body');
+        $("#mm").menu({
+            onClick: function (item) {
+                if (item.iconCls == 'icon-ok') {
+                    $('#dg').datagrid('hideColumn', item.name);
+                    $("#mm").menu('setIcon', {
+                        //设置他的每个菜单项的图标
+                        target: item.target,
+                        iconCls: 'icon-empty'
+                    });
+                } else {
+                    $('#dg').datagrid('showColumn', item.name);
+                    console.log(item.target);
+                    $("#mm").menu('setIcon', {
+                        target: item.target,
+                        iconCls: 'icon-ok'
+                    });
+                }
+            }
+        });
+        var fields = $('#dg').datagrid('getColumnFields');//获取冻结的数据
+        for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            var col = $('#dg').datagrid('getColumnOption', field);//通过他的属性，返回他的指定字段
+            $("#mm").menu('appendItem', {
+                text: col.title,
+                name: field,
+                iconCls: 'icon-ok',
+            });
+        }
+        // textMenu()
+    }
+    function textMenu() {
+        $("#row_btn").menubutton({
+        height: 28,
+        menu:"#mm",
+    })
+    }
+    function Excel() {
+        var rows = $('#dg').datagrid('getRows');
+        $('#dg').datagrid('toExcel', {
+            filename: 'datagrid.xls',
+            rows: rows,
+            worksheet: 'Worksheet'
+        });
+    }
+    function datagrid_all() {
+        var fields = $('#dg').datagrid('getColumnFields');//获取冻结的数据
+        for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            var col = $("#dg").datagrid('getColumnOption', field);
+            $('#dg').datagrid('showColumn', col.field);
+            for (var key in col.title) {
+                var item = $("#mm").menu('findItem', col.title);
+                $("#mm").menu('setIcon', {
+                    target: item.target,
+                    iconCls: 'icon-ok'
+                });
+            }
+        }
+        $("#datagrid_li1").css("border", "none")
+        $("#datagrid_a1").css("color", "#000")
+        $("#datagrid_li").css("border-bottom", "solid 2px #009999")
+        $("#datagrid_a").css("color", "#009999")
+    }
+    function datagird_name() {
+        var fields = $('#dg').datagrid('getColumnFields');//获取冻结的数据
+        for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            var col = $("#dg").datagrid('getColumnOption', field);
+            if (col.title == '手机号' || col.title == '地址' || col.title == '性别') {
+                $('#dg').datagrid('hideColumn', col.field);
+                for (var key in col.title) {
+                    var item = $("#mm").menu('findItem', col.title);
+                    $("#mm").menu('setIcon', {
+                        target: item.target,
+                        iconCls: 'icon-closed'
+                    });
+                }
+            } else {
+                $('#dg').datagrid('showColumn', col.field);
+                for (var key in col.title) {
+                    var item = $("#mm").menu('findItem', col.title);
+                    $("#mm").menu('setIcon', {
+                        target: item.target,
+                        iconCls: 'icon-ok'
+                    });
+                }
+
+            }
+
+        }
+        $("#datagrid_li1").css("border-bottom", "solid 2px #009999")
+        $("#datagrid_a1").css("color", "#009999")
+        $("#datagrid_li").css("border", "none")
+        $("#datagrid_a").css("color", "#000")
+    }
+    $("#moduls").menubutton({
+        height: 30,
+    })
+    var page = $("#dg").datagrid('getPager')
+    page.pagination({
+        total: alldata.length,
+        layout: ['list', 'prev', 'links', 'next', 'manual'],
+        afterPageText: "页",
+        beforePageText: "跳至",
+        pageList: [5, 10, 15, 20],
+        onSelectPage: function (pageNo, pageSize) {
+            console.log(pageNo, pageSize)
+            var start = (pageNo - 1) * pageSize;
+            var end = start + pageSize;
+            $("#dg").datagrid("loadData", alldata.slice(start, end));
+            page.pagination('refresh', {
+                total: alldata.length,
+                pageNumber: pageNo
+            })
+        }
+    })
+</script>
+
+</html>
